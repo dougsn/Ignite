@@ -3,10 +3,14 @@ import { RepositoryItem } from "./RepositoryItem";
 
 import "../styles/repositories.scss";
 
-// https://api.github.com/orgs/rocketseat/repos
+interface Repository {
+  name: string;
+  description: string;
+  html_url: string;
+}
 
 export function RepositoryList() {
-  const [repositories, setRepositories] = useState([]);
+  const [repositories, setRepositories] = useState<Repository[]>([]); // Tipando o estado, que é salvo com os dados da API
 
   // Toda vez que repositories mudar, o useEffect será disparado. Que no caso é a sua 'dependencia'
   // Caso o array esteja vazio, o useEffect sera executado uma unica vez, assim que o componente foi renderizado.

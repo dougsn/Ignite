@@ -1,5 +1,7 @@
 import { useState } from "react";
 
+// Componente feito para visualizar a mudança de estado.
+
 export function Counter() {
   const [counter, setCounter] = useState(0);
 
