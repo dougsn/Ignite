@@ -17,7 +17,8 @@ import {
   Text,
   useBreakpointValue,
 } from "@chakra-ui/react";
-import { RiAddLine, RiPencilLine } from "react-icons/ri";
+import Link from "next/link";
+import { RiAddLine } from "react-icons/ri";
 
 export default function UserList() {
   const isWideVersion = useBreakpointValue({
@@ -36,15 +37,16 @@ export default function UserList() {
               Usuários
             </Heading>
 
-            <Button
-              as="a"
-              size="sm"
-              fontSize="sm"
-              colorScheme="pink"
-              leftIcon={<Icon as={RiAddLine} fontSize="20" />}
-            >
-              Criar novo
-            </Button>
+            <Link href="/users/create" passHref>
+              <Button
+                size="sm"
+                fontSize="sm"
+                colorScheme="pink"
+                leftIcon={<Icon as={RiAddLine} fontSize="20" />}
+              >
+                Criar novo
+              </Button>
+            </Link>
           </Flex>
 
           <Table colorScheme="withAlpha">
@@ -56,7 +58,6 @@ export default function UserList() {
                 <Th>Usuário</Th>
 
                 {isWideVersion && <Th>Data de cadastro</Th>}
-
               </Tr>
             </Thead>
             <Tbody>
@@ -74,8 +75,6 @@ export default function UserList() {
                 </Td>
 
                 {isWideVersion && <Td>04 de abril, 2021</Td>}
-
-                
               </Tr>
             </Tbody>
           </Table>
