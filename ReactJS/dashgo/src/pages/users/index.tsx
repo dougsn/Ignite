@@ -21,6 +21,7 @@ import {
 import Link from "next/link";
 import { RiAddLine } from "react-icons/ri";
 import { useUsers } from "@/src/services/hooks/useUsers";
+import { useState } from "react";
 
 type User = {
   id: number;
@@ -30,8 +31,11 @@ type User = {
 };
 
 export default function UserList() {
+  // Estado para controle da paginação.
+  const [page, setPage] = useState(1);
+
   // Utilizando o useQuery para buscar os dados na API e fazer um CacheLocal para reaproveitar informações.
-  const { data, isLoading, isFetching, error } = useUsers();
+  const { data, isLoading, isFetching, error } = useUsers(page);
 
   const isWideVersion = useBreakpointValue({
     base: false,
@@ -86,7 +90,7 @@ export default function UserList() {
                   </Tr>
                 </Thead>
                 <Tbody>
-                  {data?.map((user: User) => {
+                  {data.users.map((user: User) => {
                     return (
                       <Tr key={user.id}>
                         <Td px={["4", "4", "6"]}>
@@ -108,9 +112,9 @@ export default function UserList() {
                 </Tbody>
               </Table>
               <Pagination
-                totalCountOfRegisters={200}
-                currentPage={5}
-                onPageChange={() => {}}
+                totalCountOfRegisters={data.totalCount}
+                currentPage={page}
+                onPageChange={setPage}
               />
             </>
           )}
