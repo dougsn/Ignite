@@ -1,4 +1,4 @@
-import { createServer, Factory, Model } from 'miragejs';
+import { createServer, Factory, Model, Response } from 'miragejs';
 import faker from 'faker';
 
 
@@ -17,20 +17,20 @@ export function makeServer() {
         // factorie é utilizado para criar dados fakes em massa
         factories: {
             user: Factory.extend({
-                name(i: number){
-                return `User ${i + 1}`
+                name(i: number) {
+                    return `User ${i + 1}`
                 },
-                email(){
+                email() {
                     return faker.internet.email().toLowerCase();
                 },
-                createdAt(){
+                createdAt() {
                     return faker.date.recent(10);
                 },
             })
         },
 
         seeds(server) {
-            server.createList('user', 10); // Cria 10 usuarios
+            server.createList('user', 200); // Cria 200 usuarios
         },
 
 
@@ -38,9 +38,28 @@ export function makeServer() {
             this.namespace = 'api';
             this.timing = 750; // Delay de 750ms para a chamada.
 
-            this.get('/users');
+            this.get('/users', function (schema, request) {
+                const { page = 1, per_page = 10 } = request.queryParams
+
+                const total = schema.all('user').length;
+
+                const pageStart = (Number(page) - 1) * Number(per_page);
+                const pageEnd = pageStart + Number(per_page);
+
+                const users = this.serialize(schema.all('user'))
+                    .users.slice(pageStart, pageEnd)
+
+                return new Response(
+                    200,
+
+                    { 'x-total-count': String(total) },
+                    { users }
+
+                )
+
+            });
             this.post('/users');
-            
+
             this.namespace = '';
             this.passthrough();
         }
